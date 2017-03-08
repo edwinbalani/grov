@@ -52,8 +52,8 @@ origin = [20, 20]
 standing_point = origin
 goal = [26, 28]
 trajectory = ax.plot([x[origin[0]][origin[1]]], [y[origin[0]][origin[1]]], 
-					[z[origin[0]][origin[1]]], markerfacecolor='m', 
-					markeredgecolor='m', marker='o', markersize=5, alpha=0.6)
+					[z[origin[0]][origin[1]]], markerfacecolor='r', 
+					markeredgecolor='r', marker='o', markersize=5, alpha=0.6)
 trajectory = ax.plot([x[goal[0]][goal[1]]], [y[goal[0]][goal[1]]], 
 					[z[goal[0]][goal[1]]], markerfacecolor='g', 
 					markeredgecolor='g', marker='o', markersize=5, alpha=0.6)
@@ -65,14 +65,12 @@ while origin != goal:
 	standing_point = command_interpreter(standing_point, command)
 	trajectory = ax.plot([x[standing_point[0]][standing_point[1]]], 
 						[y[standing_point[0]][standing_point[1]]], 
-						[z[standing_point[0]][standing_point[1]]], markerfacecolor='r', 
-						markeredgecolor='r', marker='o', markersize=5, alpha=0.6)
+						[z[standing_point[0]][standing_point[1]]], markerfacecolor='b', 
+						markeredgecolor='b', marker='o', markersize=5, alpha=0.6)
 	plt.draw()
 		
 	plt.show(block = False)	
-	plt.pause(2)
 
 print("You have reached the goal!")
-plt.show()
 
 
