@@ -36,6 +36,7 @@ with np.load(filename) as dem:
 
 region = np.s_[5:50, 5:50]
 x, y, z = x[region], y[region], z[region]
+barriers = [[25, 25], []]
 
 fig, ax = plt.subplots(subplot_kw=dict(projection='3d'))
 ax.set_xlabel("South-North")
@@ -61,7 +62,7 @@ plt.show(block = False)
 plt.pause(5)
 
 while origin != goal:
-	command = input("**Please type your command with direction and distance, e.g. east 2**\n")
+	command = input("**Please type your command with direction and distance", e.g. east 2**\n")
 	standing_point = command_interpreter(standing_point, command)
 	trajectory = ax.plot([x[standing_point[0]][standing_point[1]]], 
 						[y[standing_point[0]][standing_point[1]]], 
