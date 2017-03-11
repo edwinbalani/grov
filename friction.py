@@ -12,7 +12,7 @@
 """Functions related to probe traction"""
 
 import numpy as np
-
+import analysis
 
 def fix_angle_range(a: float):
     """Fix radian angles to range [0, pi]"""
@@ -38,3 +38,15 @@ def safe_slope(grad: np.ndarray, mu: float):
     phi = np.arctan2(mu, 1)  # Angle of limiting friction
     slope_angle = fix_angle_range(np.arctan2(grad[1], grad[0]))
     return slope_angle <= phi
+
+
+def safe_point(grid, indices, mu, window_size=5):
+    """
+    Determine whether a point is safe for the probe to climb.
+    :param grid: 2-D grid of Z values
+    :param indices: indices of point
+    :param mu: coefficient of friction at point
+    :param window_size: window size for gradient fit calculation (default 5)
+    :return:
+    """
+    return safe_slope(analysis.gradient(grid, indices, window_size=window_size), mu)
