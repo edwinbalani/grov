@@ -122,7 +122,7 @@ def a_star_search(origin, goal, heuristic, coordinates, anomaly, marked, z):
             priority_enqueue(pq, (boundary[0][0] + 1, boundary[0][1]), boundary[1] + 1 * gradient_difficulty(grad),
                              heuristic((boundary[0][0] + 1, boundary[0][1]), goal), boundary[0])
             trace[(boundary[0][0] + 1, boundary[0][1])] = boundary[0]
-
+    print("There is no way we can reach the goal.")
 
 filename = cbook.get_sample_data('jacksboro_fault_dem.npz', asfileobj=False)
 with np.load(filename) as dem:
@@ -160,10 +160,10 @@ for i in range(30, 40):
 
 trajectory = ax.plot([x[origin[0]][origin[1]]], [y[origin[0]][origin[1]]],
                      [z[origin[0]][origin[1]]], markerfacecolor='m',
-                     markeredgecolor='m', marker='o', markersize=5, alpha=0.6)
+                     markeredgecolor='w', marker='o', markersize=5, alpha=0.6)
 trajectory = ax.plot([x[goal[0]][goal[1]]], [y[goal[0]][goal[1]]],
                      [z[goal[0]][goal[1]]], markerfacecolor='g',
-                     markeredgecolor='g', marker='o', markersize=5, alpha=0.6)
+                     markeredgecolor='w', marker='o', markersize=5, alpha=0.6)
 plt.show(block=False)
 plt.pause(5)
 
