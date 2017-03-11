@@ -9,20 +9,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
 import time
-
+import copy
 
 def command_interpreter(standing_point, command):
     command_words = command.split()
+    prop_stand_point = copy.copy(standing_point)
     if command_words[0].lower() == "east":
-        standing_point[0] += int(command_words[1])
+        prop_stand_point[0] += int(command_words[1])
     if command_words[0].lower() == "west":
-        standing_point[0] -= int(command_words[1])
+        prop_stand_point[0] -= int(command_words[1])
     if command_words[0].lower() == "north":
-        standing_point[1] += int(command_words[1])
+        prop_stand_point[1] += int(command_words[1])
     if command_words[0].lower() == "south":
-        standing_point[1] -= int(command_words[1])
-    print(standing_point)
-    return standing_point
+        prop_stand_point[1] -= int(command_words[1])
+    return prop_stand_point
 
 
 filename = cbook.get_sample_data('jacksboro_fault_dem.npz', asfileobj=False)
@@ -51,18 +51,28 @@ surf = ax.plot_surface(x, y, z, rstride=1, cstride=1, facecolors=rgb,
 origin = [20, 20]
 standing_point = origin
 goal = [26, 28]
+obstacles = [[20, 22]]
+
 trajectory = ax.plot([x[origin[0]][origin[1]]], [y[origin[0]][origin[1]]],
                      [z[origin[0]][origin[1]]], markerfacecolor='m',
-                     markeredgecolor='m', marker='o', markersize=5, alpha=0.6)
+                     markeredgecolor='w', marker='o', markersize=5, alpha=0.6)
 trajectory = ax.plot([x[goal[0]][goal[1]]], [y[goal[0]][goal[1]]], [z[goal[0]][goal[1]]], markerfacecolor='g',
-                     markeredgecolor='g', marker='o', markersize=5, alpha=0.6)
+                     markeredgecolor='w', marker='o', markersize=5, alpha=0.6)
 plt.show(block=False)
 plt.pause(5)
 
 while origin != goal:
     command = input("**Please type your command with direction and distance, e.g. east 2**\n")
-    standing_point = command_interpreter(standing_point, command)
-    trajectory = ax.plot([x[standing_point[0]][standing_point[1]]], [y[standing_point[0]][standing_point[1]]],
+    proposed_standing_point = command_interpreter(standing_point, command)
+    if proposed_standing_point in obstacles:
+        print("Ah oh, there is an obstacle at that location.")
+        print("Please avoid that point marked in black.")
+        trajectory = ax.plot([x[proposed_standing_point[0]][proposed_standing_point[1]]], [y[proposed_standing_point[0]][proposed_standing_point[1]]],
+                     [z[proposed_standing_point[0]][proposed_standing_point[1]]], markerfacecolor='k',
+                     markeredgecolor='k', marker='o', markersize=5, alpha=0.6)
+    else:
+        standing_point = proposed_standing_point
+        trajectory = ax.plot([x[standing_point[0]][standing_point[1]]], [y[standing_point[0]][standing_point[1]]],
                          [z[standing_point[0]][standing_point[1]]], markerfacecolor='r', markeredgecolor='r',
                          marker='o', markersize=5, alpha=0.6)
     plt.draw()
@@ -71,6 +81,6 @@ while origin != goal:
     plt.pause(2)
 
 print("You have reached the goal!")
-plt.show()
-
+plt.show(block=False)
+plt.pause(10)
 

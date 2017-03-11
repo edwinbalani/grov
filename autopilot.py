@@ -11,6 +11,10 @@ import matplotlib.animation as animation
 import time
 from math import sqrt
 import copy
+import math
+
+def gradient_difficulty(gradient):
+    return 1 + 1 / (1 + math.exp(-gradient))
 
 
 def command_interpreter(standing_point, command):
@@ -51,6 +55,9 @@ def a_star_search(origin, goal, heuristic, coordinates, anomaly, marked):
         if boundary[0] == goal:
             return trace, boundary[1], boundary[3]
         if boundary[0] in anomaly:
+            trajectory = ax.plot([x[boundary[0][0]][boundary[0][1]]], [y[boundary[0][0]][boundary[0][1]]],
+                     [z[boundary[0][0]][boundary[0][1]]], markerfacecolor='k',
+                     markeredgecolor='k', marker='o', markersize=5, alpha=0.6)
             print("There is an obastacle at", (boundary[0]))
             print("Start over, avoiding", boundary[0])
             marked = original_marked
@@ -58,8 +65,8 @@ def a_star_search(origin, goal, heuristic, coordinates, anomaly, marked):
             return a_star_search(origin, goal, heuristic, coordinates, anomaly, marked)
         if (boundary[0][0] + 1 in coordinates[0]) and (boundary[0][1] + 1 in coordinates[1]) and (
                     marked[(boundary[0][0] + 1, boundary[0][1] + 1)] == False):
-            if (boundary[0][0] + 1, boundary[0][1] + 1) == (9, 9):
-                marked[(boundary[0][0] + 1, boundary[0][1] + 1)]
+#            if (boundary[0][0] + 1, boundary[0][1] + 1) == (9, 9):
+#                marked[(boundary[0][0] + 1, boundary[0][1] + 1)]
             marked[(boundary[0][0] + 1, boundary[0][1] + 1)] = True
             priority_enqueue(pq, (boundary[0][0] + 1, boundary[0][1] + 1), boundary[1] + 1.414,
                              heuristic((boundary[0][0] + 1, boundary[0][1] + 1), goal), boundary[0])
@@ -134,7 +141,14 @@ surf = ax.plot_surface(x, y, z, rstride=1, cstride=1, facecolors=rgb,
 
 origin = (5, 5)
 goal = (40, 40)
-obstacles = [(9, 7), (9, 8), (9, 9), (9, 10), (9, 11), (9, 12)]
+obstacles = [(7, 9), (8, 9), (9, 9), (10, 9), (11, 9), (12, 9),
+            (20, 16), (20, 17), (20, 18), (20, 19), (20, 20)]
+for i in range(15, 25):
+    for j in range(15, 25):
+        obstacles.append((i, j))
+for i in range(30, 40):
+    for j in range(30, 40):
+        obstacles.append((i, j))
 
 trajectory = ax.plot([x[origin[0]][origin[1]]], [y[origin[0]][origin[1]]],
                      [z[origin[0]][origin[1]]], markerfacecolor='m',
@@ -151,7 +165,6 @@ for i in coordinates[0]:
         marked[(i, j)] = False
 
 trace, dist, parent = a_star_search(origin, goal, heuristic, coordinates, obstacles, marked)
-print(dist)
 while parent != origin:
     print(parent[0], parent[1])
     trajectory = ax.plot([x[parent[0]][parent[1]]], [y[parent[0]][parent[1]]],
