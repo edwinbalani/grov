@@ -13,6 +13,9 @@ from math import sqrt
 import copy
 import math
 
+def gradient_calculation(z, point1, point2):
+    return (z[point2[0]][point2[1]] - z[point1[0]][point1[1]]) / (math.sqrt((point1[0]-point2[0]) ** 2 + (point1[1]-point2[1]) ** 2))
+
 def gradient_difficulty(gradient):
     return 1 + 1 / (1 + math.exp(-gradient))
 
@@ -45,7 +48,7 @@ def heuristic(standing_point, goal):
     return sqrt((goal[0] - standing_point[0]) ** 2 + (goal[1] - standing_point[1]) ** 2)
 
 
-def a_star_search(origin, goal, heuristic, coordinates, anomaly, marked):
+def a_star_search(origin, goal, heuristic, coordinates, anomaly, marked, z):
     original_marked = copy.copy(marked)
     pq = list()
     trace = dict()
@@ -62,55 +65,61 @@ def a_star_search(origin, goal, heuristic, coordinates, anomaly, marked):
             print("Start over, avoiding", boundary[0])
             marked = original_marked
             marked[boundary[0]] = True
-            return a_star_search(origin, goal, heuristic, coordinates, anomaly, marked)
+            return a_star_search(origin, goal, heuristic, coordinates, anomaly, marked, z)
         if (boundary[0][0] + 1 in coordinates[0]) and (boundary[0][1] + 1 in coordinates[1]) and (
                     marked[(boundary[0][0] + 1, boundary[0][1] + 1)] == False):
-#            if (boundary[0][0] + 1, boundary[0][1] + 1) == (9, 9):
-#                marked[(boundary[0][0] + 1, boundary[0][1] + 1)]
+            grad = gradient_calculation(z, boundary[0], (boundary[0][0] + 1, boundary[0][1] + 1))
             marked[(boundary[0][0] + 1, boundary[0][1] + 1)] = True
-            priority_enqueue(pq, (boundary[0][0] + 1, boundary[0][1] + 1), boundary[1] + 1.414,
+            priority_enqueue(pq, (boundary[0][0] + 1, boundary[0][1] + 1), boundary[1] + 1.414 * gradient_difficulty(grad),
                              heuristic((boundary[0][0] + 1, boundary[0][1] + 1), goal), boundary[0])
             trace[(boundary[0][0] + 1, boundary[0][1] + 1)] = boundary[0]
         if (boundary[0][0] + 1 in coordinates[0]) and (boundary[0][1] - 1 in coordinates[1]) and (
                     marked[(boundary[0][0] + 1, boundary[0][1] - 1)] == False):
+            grad = gradient_calculation(z, boundary[0], (boundary[0][0] + 1, boundary[0][1] - 1))
             marked[(boundary[0][0] + 1, boundary[0][1] - 1)] = True
-            priority_enqueue(pq, (boundary[0][0] + 1, boundary[0][1] - 1), boundary[1] + 1.414,
+            priority_enqueue(pq, (boundary[0][0] + 1, boundary[0][1] - 1), boundary[1] + 1.414 * gradient_difficulty(grad),
                              heuristic((boundary[0][0] + 1, boundary[0][1] - 1), goal), boundary[0])
             trace[(boundary[0][0] + 1, boundary[0][1] - 1)] = boundary[0]
         if (boundary[0][0] - 1 in coordinates[0]) and (boundary[0][1] + 1 in coordinates[1]) and (
                     marked[(boundary[0][0] - 1, boundary[0][1] + 1)] == False):
+            grad = gradient_calculation(z, boundary[0], (boundary[0][0] - 1, boundary[0][1] + 1))
             marked[(boundary[0][0] - 1, boundary[0][1] + 1)] = True
-            priority_enqueue(pq, (boundary[0][0] - 1, boundary[0][1] + 1), boundary[1] + 1.414,
+            priority_enqueue(pq, (boundary[0][0] - 1, boundary[0][1] + 1), boundary[1] + 1.414 * gradient_difficulty(grad),
                              heuristic((boundary[0][0] - 1, boundary[0][1] + 1), goal), boundary[0])
             trace[(boundary[0][0] - 1, boundary[0][1] + 1)] = boundary[0]
         if (boundary[0][0] - 1 in coordinates[0]) and (boundary[0][1] - 1 in coordinates[1]) and (
                     marked[(boundary[0][0] - 1, boundary[0][1] - 1)] == False):
+            grad = gradient_calculation(z, boundary[0], (boundary[0][0] - 1, boundary[0][1] - 1))
             marked[(boundary[0][0] - 1, boundary[0][1] - 1)] = True
-            priority_enqueue(pq, (boundary[0][0] - 1, boundary[0][1] - 1), boundary[1] + 1.414,
+            priority_enqueue(pq, (boundary[0][0] - 1, boundary[0][1] - 1), boundary[1] + 1.414 * gradient_difficulty(grad),
                              heuristic((boundary[0][0] - 1, boundary[0][1] - 1), goal), boundary[0])
             trace[(boundary[0][0] - 1, boundary[0][1] - 1)] = boundary[0]
         if (boundary[0][0] in coordinates[0]) and (boundary[0][1] - 1 in coordinates[1]) and (
                     marked[(boundary[0][0], boundary[0][1] - 1)] == False):
+            grad = gradient_calculation(z, boundary[0], (boundary[0][0], boundary[0][1] - 1))
             marked[(boundary[0][0], boundary[0][1] - 1)] = True
-            priority_enqueue(pq, (boundary[0][0], boundary[0][1] - 1), boundary[1] + 1,
+            priority_enqueue(pq, (boundary[0][0], boundary[0][1] - 1), boundary[1] + 1 * gradient_difficulty(grad),
                              heuristic((boundary[0][0], boundary[0][1] - 1), goal), boundary[0])
             trace[(boundary[0][0], boundary[0][1] - 1)] = boundary[0]
         if (boundary[0][0] in coordinates[0]) and (boundary[0][1] + 1 in coordinates[1]) and (
                     marked[(boundary[0][0], boundary[0][1] + 1)] == False):
+            grad = gradient_calculation(z, boundary[0], (boundary[0][0], boundary[0][1] + 1))
             marked[(boundary[0][0], boundary[0][1] + 1)] = True
-            priority_enqueue(pq, (boundary[0][0], boundary[0][1] + 1), boundary[1] + 1,
+            priority_enqueue(pq, (boundary[0][0], boundary[0][1] + 1), boundary[1] + 1 * gradient_difficulty(grad),
                              heuristic((boundary[0][0], boundary[0][1] + 1), goal), boundary[0])
             trace[(boundary[0][0], boundary[0][1] + 1)] = boundary[0]
         if (boundary[0][0] - 1 in coordinates[0]) and (boundary[0][1] in coordinates[1]) and (
                     marked[(boundary[0][0] - 1, boundary[0][1])] == False):
+            grad = gradient_calculation(z, boundary[0], (boundary[0][0] - 1, boundary[0][1]))
             marked[(boundary[0][0] - 1, boundary[0][1])] = True
-            priority_enqueue(pq, (boundary[0][0] - 1, boundary[0][1]), boundary[1] + 1,
+            priority_enqueue(pq, (boundary[0][0] - 1, boundary[0][1]), boundary[1] + 1 * gradient_difficulty(grad),
                              heuristic((boundary[0][0] - 1, boundary[0][1]), goal), boundary[0])
             trace[(boundary[0][0] - 1, boundary[0][1])] = boundary[0]
         if (boundary[0][0] + 1 in coordinates[0]) and (boundary[0][1] in coordinates[1]) and (
                     marked[(boundary[0][0] + 1, boundary[0][1])] == False):
+            grad = gradient_calculation(z, boundary[0], (boundary[0][0] + 1, boundary[0][1]))
             marked[(boundary[0][0] + 1, boundary[0][1])] = True
-            priority_enqueue(pq, (boundary[0][0] + 1, boundary[0][1]), boundary[1] + 1,
+            priority_enqueue(pq, (boundary[0][0] + 1, boundary[0][1]), boundary[1] + 1 * gradient_difficulty(grad),
                              heuristic((boundary[0][0] + 1, boundary[0][1]), goal), boundary[0])
             trace[(boundary[0][0] + 1, boundary[0][1])] = boundary[0]
 
@@ -123,10 +132,9 @@ with np.load(filename) as dem:
     y = np.linspace(dem['ymin'], dem['ymax'], nrows)
     x, y = np.meshgrid(x, y)
 
-coordinates = (range(5, 51), range(5, 51))
+coordinates = (range(0, 45), range(0, 45))
 region = np.s_[5:50, 5:50]
 x, y, z = x[region], y[region], z[region]
-barriers = [[25, 25], []]
 
 fig, ax = plt.subplots(subplot_kw=dict(projection='3d'))
 ax.set_xlabel("South-North")
@@ -164,7 +172,7 @@ for i in coordinates[0]:
     for j in coordinates[1]:
         marked[(i, j)] = False
 
-trace, dist, parent = a_star_search(origin, goal, heuristic, coordinates, obstacles, marked)
+trace, dist, parent = a_star_search(origin, goal, heuristic, coordinates, obstacles, marked, z)
 while parent != origin:
     print(parent[0], parent[1])
     trajectory = ax.plot([x[parent[0]][parent[1]]], [y[parent[0]][parent[1]]],
