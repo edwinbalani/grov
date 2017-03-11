@@ -151,12 +151,14 @@ origin = (5, 5)
 goal = (40, 40)
 obstacles = [(7, 9), (8, 9), (9, 9), (10, 9), (11, 9), (12, 9),
             (20, 16), (20, 17), (20, 18), (20, 19), (20, 20)]
+
 for i in range(15, 25):
     for j in range(15, 25):
         obstacles.append((i, j))
 for i in range(30, 40):
     for j in range(30, 40):
         obstacles.append((i, j))
+#obstacles = []
 
 trajectory = ax.plot([x[origin[0]][origin[1]]], [y[origin[0]][origin[1]]],
                      [z[origin[0]][origin[1]]], markerfacecolor='m',
