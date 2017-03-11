@@ -39,7 +39,7 @@ barriers = [[25, 25], []]
 
 fig, ax = plt.subplots(subplot_kw=dict(projection='3d'))
 ax.set_xlabel("South-North")
-ax.set_ylabel("West-East")
+ax.set_ylabel("East-West")
 
 ls = LightSource(270, 45)
 # To use a custom hillshading mode, override the built-in shading and pass
@@ -61,7 +61,7 @@ trajectory = ax.plot([x[goal[0]][goal[1]]], [y[goal[0]][goal[1]]], [z[goal[0]][g
 plt.show(block=False)
 plt.pause(5)
 
-while origin != goal:
+while standing_point != goal:
     command = input("**Please type your command with direction and distance, e.g. east 2**\n")
     proposed_standing_point = command_interpreter(standing_point, command)
     if proposed_standing_point in obstacles:
@@ -81,6 +81,6 @@ while origin != goal:
     plt.pause(2)
 
 print("You have reached the goal!")
-plt.show(block=False)
+plt.show(block = False)
 plt.pause(10)
 
